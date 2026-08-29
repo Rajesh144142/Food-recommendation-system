@@ -30,7 +30,7 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from agents.team import create_food_recommendation_team
+from agents.team_factory import TeamFactory
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -279,8 +279,9 @@ async def agents_websocket(websocket: WebSocket):
         """Run the AutoGen team and push every useful message into the queue."""
         nonlocal model_client
         try:
-            team, model_client = create_food_recommendation_team(
-                human_input_func=human_input_from_queue
+            team, model_client = TeamFactory.create(
+                "food_recommendation",
+                human_input_func=human_input_from_queue,
             )
             await output_queue.put(
                 {

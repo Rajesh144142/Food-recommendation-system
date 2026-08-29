@@ -162,6 +162,24 @@ User (browser / CLI)
 
 The LLM never connects to the database. It only calls the tool.
 
+### Factory pattern (project convention)
+
+Swapable pieces are created through factories so you can reuse them anywhere:
+
+| Factory | Example |
+|---------|---------|
+| `RateLimiterFactory` | `RateLimiterFactory.create("fixed_window", max_requests=5, window_seconds=60)` |
+| `ModelClientFactory` | `ModelClientFactory.create("gemini")` |
+| `TeamFactory` | `TeamFactory.create("food_recommendation")` |
+
+```python
+from app.rate_limiting import RateLimiterFactory
+from agents.team_factory import TeamFactory
+
+limiter = RateLimiterFactory.create("token_bucket", capacity=10, refill_rate_per_second=1)
+team, client = TeamFactory.create("food_recommendation")
+```
+
 ---
 
 ## Optional: use PostgreSQL later

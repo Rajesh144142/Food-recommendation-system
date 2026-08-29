@@ -1,0 +1,40 @@
+---
+description: Use factory architecture for swapable project components
+alwaysApply: true
+---
+
+# Factory architecture
+
+For swapable building blocks in this project, use **interface + implementations + factory**.
+
+## Pattern
+
+1. Define a clear interface / base class (common methods).
+2. Add concrete implementations (algorithms / providers).
+3. Expose a `SomethingFactory.create(type_name, **kwargs)` entry point.
+4. Call sites should prefer the factory, not hard-code concrete classes.
+
+## Existing factories
+
+- `app.rate_limiting.RateLimiterFactory` — `"fixed_window"`, `"token_bucket"`
+- `agents.model_client_factory.ModelClientFactory` — `"gemini"`
+- `agents.team_factory.TeamFactory` — `"food_recommendation"`
+
+## Examples
+
+```python
+from app.rate_limiting import RateLimiterFactory
+limiter = RateLimiterFactory.create("fixed_window", max_requests=5, window_seconds=60)
+
+from agents.model_client_factory import ModelClientFactory
+client = ModelClientFactory.create("gemini")
+
+from agents.team_factory import TeamFactory
+team, client = TeamFactory.create("food_recommendation")
+```
+
+## Do not
+
+- Do not invent a factory for one-off helpers.
+- Do not bypass layers: Tool → Service → Repository still applies for data access.
+- Do not put business SQL inside factories.

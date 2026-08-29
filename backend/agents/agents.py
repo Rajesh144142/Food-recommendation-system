@@ -10,11 +10,7 @@
 from autogen_agentchat.agents import AssistantAgent, UserProxyAgent
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
-from agents.config import (
-    get_gemini_api_key,
-    get_gemini_base_url,
-    get_gemini_model,
-)
+from agents.model_client_factory import ModelClientFactory
 from agents.tool_adapter import search_foods_tool
 
 # Shared scope rules for every AI agent.
@@ -48,28 +44,11 @@ If the user is out of scope:
 
 def create_model_client() -> OpenAIChatCompletionClient:
     """
-    One shared Gemini client for all AI agents.
+    Create the default model client via ModelClientFactory.
 
-    Why OpenAIChatCompletionClient?
-      AutoGen needs chat + tool calling.
-      Google exposes an OpenAI-compatible URL for Gemini.
-      We use your GEMINI_API_KEY against that URL.
-
-    (The simple google.genai interactions.create demo is great for
-     one-shot text, but AutoGen agents need this chat/tools path.)
+    Prefer calling ModelClientFactory.create(...) directly in new code.
     """
-    return OpenAIChatCompletionClient(
-        model=get_gemini_model(),
-        api_key=get_gemini_api_key(),
-        base_url=get_gemini_base_url(),
-        model_info={
-            "vision": False,
-            "function_calling": True,  # FoodSearcher needs tools
-            "json_output": True,
-            "family": "gemini",
-            "structured_output": False,
-        },
-    )
+    return ModelClientFactory.create("gemini")
 
 
 def create_preference_parser(model_client: OpenAIChatCompletionClient) -> AssistantAgent:

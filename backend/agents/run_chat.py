@@ -31,7 +31,7 @@ if str(BACKEND_DIR) not in sys.path:
 
 from autogen_agentchat.ui import Console
 
-from agents.team import create_food_recommendation_team
+from agents.team_factory import TeamFactory
 
 
 async def main() -> None:
@@ -44,7 +44,7 @@ async def main() -> None:
 
     # IMPORTANT FOR CONTEXT:
     # Create the team once. Reuse it for every message below.
-    team, model_client = create_food_recommendation_team()
+    team, model_client = TeamFactory.create("food_recommendation")
 
     try:
         first_message = input(
