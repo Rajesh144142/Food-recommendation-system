@@ -1,0 +1,11 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+websockets>=14.0
+sqlalchemy==2.0.36
+pydantic==2.10.4
+pydantic-settings==2.7.0
+alembic==1.14.0
+python-dotenv==1.0.1
+autogen-agentchat>=0.4.9
+autogen-ext[openai]>=0.4.9
+google-genai>=1.0.0
